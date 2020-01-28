@@ -20,14 +20,8 @@ jobs:
       run: |
         pip install -r requirements.txt
         npm install .
-  build:
-    name: Build Site
-    runs-on: ubuntu-latest
-    needs: setup_env
-    steps:
-    - name: Prepare
+    - name: Build Prepare
       run: |
-        cd OI-Wiki_Actions
         set -e
         chmod +x ./scripts/build.sh && ./scripts/build.sh
     - name: Build mkdocs 
@@ -38,13 +32,6 @@ jobs:
       run: npx gulp minify
     - name: Restore
       run: set +e
-  deploy:
-    name: Deployment
-    runs-on: ubuntu-latest
-    needs: [setup_env, build]
-    steps:
-    - name: Prepare
-      run: cd OI-Wiki_Actions
     - name: Upload Artifact
       uses: actions/upload-artifact@v1
       with:
