@@ -27,7 +27,7 @@ jobs:
     steps:
     - name: Prepare
       run: |
-        cd $GITHUB_WORKSPACE
+        cd OI-Wiki_Actions
         set -e
         chmod +x ./scripts/build.sh && ./scripts/build.sh
     - name: Build mkdocs 
@@ -44,7 +44,7 @@ jobs:
     needs: [setup_env, build]
     steps:
     - name: Prepare
-      run: cd $GITHUB_WORKSPACE
+      run: cd OI-Wiki_Actions
     - name: Upload Artifact
       uses: actions/upload-artifact@v1
       with:
