@@ -1,0 +1,50 @@
+name: Deploy (Preview Mode)
+on: [push, pull_request]
+jobs:
+  setup_env:
+    name: Setup Environment
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@master
+    - name: Setup Node.js 
+      uses: actions/setup-node@v1
+      with:
+        node-version: '10.9'
+    - name: Setup Python
+      uses: actions/setup-python@v1
+      with:
+        python-version: '3.6' 
+        architecture: 'x64' 
+    - name: Setup Requirements
+      run: |
+        pip install -r requirements.txt
+        npm install .
+  build:
+    name: Build Site
+    runs-on: ubuntu-latest
+    needs: setup_env
+    steps:
+    - name: Prepare
+      run: |
+        set -e
+        chmod +x ./scripts/build.sh && ./scripts/build.sh
+    - name: Build mkdocs 
+      run: mkdocs build -v
+    - name: Mathjax Render 
+      run: find ./site -type f -name '*.html' -exec node --max_old_space_size=512 ./scripts/render_math.js {} \;
+    - name: Minify
+      run: npx gulp minify
+    - name: Restore
+      run: set +e
+  deploy:
+    name: Deployment
+    runs-on: ubuntu-latest
+    needs: [setup_env, build]
+    steps:
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v1
+      with:
+        name: site
+        path: site
+
