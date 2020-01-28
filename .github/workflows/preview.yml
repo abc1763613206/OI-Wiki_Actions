@@ -1,8 +1,8 @@
 name: Deploy (Preview Mode)
 on: [push, pull_request]
 jobs:
-  setup_env:
-    name: Setup Environment
+  build:
+    name: Build
     runs-on: ubuntu-latest
     steps:
     - name: Checkout Repository
