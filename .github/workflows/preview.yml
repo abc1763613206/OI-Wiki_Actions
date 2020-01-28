@@ -27,6 +27,7 @@ jobs:
     steps:
     - name: Prepare
       run: |
+        cd $GITHUB_WORKSPACE
         set -e
         chmod +x ./scripts/build.sh && ./scripts/build.sh
     - name: Build mkdocs 
@@ -42,6 +43,8 @@ jobs:
     runs-on: ubuntu-latest
     needs: [setup_env, build]
     steps:
+    - name: Prepare
+      run: cd $GITHUB_WORKSPACE
     - name: Upload Artifact
       uses: actions/upload-artifact@v1
       with:
